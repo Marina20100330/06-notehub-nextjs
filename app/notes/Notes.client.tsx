@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import css from "./Notesclient.module.css";
-// import { Toaster } from "react-hot-toast";
 import {
   useQuery,
   keepPreviousData,
-  useQueryClient,
 } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 
@@ -14,8 +12,6 @@ import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import Modal from "@/components/Modal/Modal";
 import SearchBox from "@/components/SearchBox/SearchBox";
-// import Loader from "@/components/Loader/loader";
-// import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import NoteForm from "@/components/NoteForm/NoteForm";
 
 export default function NotesClient() {
@@ -25,11 +21,11 @@ export default function NotesClient() {
   const [search, setSearch] = useState("");
 
   const perPage = 8;
-  const queryClient = useQueryClient();
+  
 
-  const { data, isLoading, isError, isFetching, error } = useQuery({
+  const { data, isLoading } = useQuery({ 
     queryKey: ["notes", currentPage, perPage, search],
-    queryFn: () => fetchNotes(currentPage, perPage, search || undefined),
+    queryFn: () => fetchNotes(currentPage, perPage, search),
     placeholderData: keepPreviousData,
   });
 
@@ -57,25 +53,6 @@ export default function NotesClient() {
       </header>
 
       <main className="notes-list">
-        {/* {isLoading && (
-          <div className={css.loaderWrapper}>
-            <Loader />
-          </div>
-        )} */}
-
-        {/* {isError && (
-          <ErrorMessage
-            message={(error as Error)?.message || "Error loading notes"}
-          />
-        )} */}
-
-        {/* {isFetching && !isLoading && (
-          <div className={css.loaderInline}>
-            <Loader />
-            <span>Updating notes...</span>
-          </div>
-        )} */}
-
         {hasResults && totalPages > 1 && (
           <Pagination
             pageCount={totalPages}
@@ -84,7 +61,7 @@ export default function NotesClient() {
           />
         )}
 
-        {/* <Toaster position="top-right" /> */}
+        {}
 
         {data && !isLoading && <NoteList notes={data.notes ?? []} />}
 
